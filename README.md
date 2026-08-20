@@ -21,35 +21,35 @@ REST API для управления банковскими картами и т
 
 Проект построен по принципам **Clean Architecture (Hexagonal Architecture)** с разделением ответственности по слоям. Модуль `Card` полностью переведён на новую архитектуру.
 
-```
+```text
 src/main/java/com/bank/cards/
 ├── domain/                          # Ядро бизнес-логики (без зависимостей от фреймворков)
-│   ├── entity/                      # Богатые доменные сущности (BankCard)
-│   ├── valueobject/                 # Value Objects (CardId, CardNumber, ExpiryDate, UserId...)
-│   ├── exception/                   # Доменные исключения
+│   ├── entity/                      # Доменные сущности (BankCard, Transaction)
+│   ├── valueobject/                 # Value Objects (CardId, UserId, TransactionId, TransactionStatus)
+│   ├── exception/                   # Доменные исключения (Card..., Transaction...)
 │   ├── port/                        # Порты (интерфейсы для инфраструктуры)
-│   └── repository/                  # Интерфейсы репозиториев
+│   └── repository/                  # Интерфейсы репозиториев (CardRepository, TransactionRepository)
 │
 ├── application/                     # Слой Use Cases (оркестрация бизнес-логики)
-│   ├── usecase/                     # UseCase-классы (CreateCard, TransferMoney, BlockCard...)
+│   ├── usecase/                     # UseCase-классы (CreateCard..., CreateTransaction...)
 │   ├── dto/                         # Application DTO (Command, Response)
-│   └── port/                        # Порты для внешних сервисов (UserQueryPort, TransactionRecordPort)
+│   └── port/                        # Порты для внешних сервисов
 │
 ├── infrastructure/                  # Адаптеры к внешним системам
-│   ├── persistence/                 # JPA-адаптеры (CardJpaEntity, JpaCardRepository, CardRepositoryAdapter)
-│   ├── adapter/                     # ACL-адаптеры (UserQueryAdapter, TransactionRecordAdapter)
-│   ├── security/encryption/         # AES-256-GCM шифрование (AesEncryptionAdapter)
-│   └── config/                      # Инфраструктурная конфигурация (CORS, Encryption)
+│   ├── persistence/                 # JPA-адаптеры (Card..., Transaction...)
+│   ├── adapter/                     # ACL-адаптеры (UserQueryAdapter)
+│   ├── security/encryption/         # AES-256-GCM шифрование
+│   └── config/                      # Инфраструктурная конфигурация
 │
 ├── presentation/                    # HTTP-слой (вход в систему)
-│   ├── controller/                  # REST-контроллеры (CardController, AdminCardController)
+│   ├── controller/                  # REST-контроллеры (CardController, TransactionController)
 │   ├── dto/request/                 # HTTP Request DTO
 │   └── exception/                   # GlobalExceptionHandler
 │
 ├── config/                          # Spring Security, JWT фильтр, OpenAPI
 ├── controller/                      # Legacy контроллеры (User, Role)
-├── service/                         # Legacy сервисы (User, Role, Transaction)
-├── entity/                          # Legacy JPA-сущности (User, Role, Transaction)
+├── service/                         # Legacy сервисы (User, Role, Transaction ❌ удаляется на финальном этапе)
+├── entity/                          # Legacy JPA-сущности (User, Role, Transaction ❌ удаляется на финальном этапе)
 ├── dto/                             # Legacy DTO
 ├── repository/                      # Legacy JPA-репозитории
 ├── mapper/                          # Legacy мапперы
