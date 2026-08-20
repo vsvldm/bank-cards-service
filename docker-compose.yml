@@ -1,24 +1,35 @@
 services:
   app:
     build: .
+    container_name: bank-app
     ports:
       - "8080:8080"
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/bank
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: iamroot
-#      JWT_SECRET: "FnEn4/+++2q7Nf7mjdfLMAn3GmflxXn1GKmBingHfJs="
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
   db:
     image: postgres:14
     container_name: bank-db
     ports:
       - "5432:5432"
+    env_file:
+      - .env
     environment:
-      - POSTGRES_DB=bank
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=iamroot
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
       timeout: 5s
       interval: 5s
       retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

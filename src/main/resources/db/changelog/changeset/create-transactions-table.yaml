@@ -15,18 +15,18 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: source_card_id
-                  type: bigint
+                  type: uuid
                   constraints:
                     nullable: false
                     foreignKeyName: fk_transactions_source_card
-                    references: cards(id)
+                    references: bank_cards(id)
               - column:
                   name: target_card_id
-                  type: bigint
+                  type: uuid
                   constraints:
                     nullable: false
                     foreignKeyName: fk_transaction_target_card
-                    references: cards(id)
+                    references: bank_cards(id)
               - column:
                   name: amount
                   type: numeric(19,2)
