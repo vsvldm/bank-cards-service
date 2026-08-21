@@ -38,8 +38,11 @@ src/main/java/com/bank/cards/
 │   └── port/                        # Порты для внешних сервисов
 │
 ├── infrastructure/                  # Адаптеры к внешним системам
-│   ├── persistence/                 # JPA-адаптеры (Card..., Transaction...)
-│   ├── adapter/                     # ACL-адаптеры (UserQueryAdapter)
+│   ├── persistence/                 # JPA-адаптеры
+│   │   ├── entity/                  # JPA-сущности (CardJpaEntity, TransactionJpaEntity)
+│   │   ├── repository/              # Spring Data репозитории (JpaCardRepository, JpaTransactionRepository)
+│   │   └── adapter/                 # Адаптеры репозиториев (CardRepositoryAdapter, TransactionRepositoryAdapter)
+│   ├── adapter/                     # ACL-адаптеры (UserQueryAdapter)              
 │   ├── security/encryption/         # AES-256-GCM шифрование
 │   └── config/                      # Инфраструктурная конфигурация
 │
@@ -66,7 +69,7 @@ src/main/java/com/bank/cards/
 - **Value Objects**: `CardNumber` с валидацией по алгоритму Луна, `ExpiryDate` с проверкой срока, `EncryptedData`
 - **Порты и Адаптеры**: Домен не знает о Spring, JPA, шифровании — всё через интерфейсы
 - **Защита от IDOR**: Все операции с картами проверяют владельца
-- **Anti-Corruption Layer**: `UserQueryAdapter` и `TransactionRecordAdapter` изолируют новую архитектуру от legacy-кода
+- **Anti-Corruption Layer**: `UserQueryAdapter` изолирует новую архитектуру от legacy-кода
 
 ## ⚙️ Функционал
 
@@ -264,8 +267,8 @@ mvn test -Dtest=*IT
 - Выделены слои: `domain`, `application`, `infrastructure`, `presentation`
 - Внедрены Value Objects (`CardId`, `CardNumber` с Luhn, `ExpiryDate`, `EncryptedData`, `UserId`)
 - Реализованы UseCase-ы: `CreateCard`, `TransferMoney`, `BlockCard`, `ActivateCard`, `DeleteCard`, `GetCards`, `GetAllCards`, `ModerateCardStatus`, `AdminDeleteCard`
-- Добавлены порты: `CardRepository`, `EncryptionPort`, `UserQueryPort`, `TransactionRecordPort`
-- Реализованы адаптеры: `CardRepositoryAdapter`, `AesEncryptionAdapter`, `UserQueryAdapter`, `TransactionRecordAdapter`
+- Добавлены порты:  `CardRepository` ,  `EncryptionPort` ,  `UserQueryPort` ,  `TransactionRepository`
+- Реализованы адаптеры:  `CardRepositoryAdapter` ,  `AesEncryptionAdapter` ,  `UserQueryAdapter` ,  `TransactionRepositoryAdapter`
 
 **Безопасность:**
 - Защита от IDOR во всех операциях с картами
