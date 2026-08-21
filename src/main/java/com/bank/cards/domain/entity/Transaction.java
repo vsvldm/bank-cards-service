@@ -29,10 +29,10 @@ public class Transaction {
 
     public static Transaction create(CardId sourceCardId, CardId targetCardId, BigDecimal amount) {
         if (amount == null || amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Сумма транзакции должна быть больше нуля");
+            throw new IllegalArgumentException("Transaction amount must be greater than zero");
         }
         if (sourceCardId.equals(targetCardId)) {
-            throw new IllegalArgumentException("Карта отправителя и получателя не могут совпадать");
+            throw new IllegalArgumentException("Source card and target card cannot be the same");
         }
 
         return new Transaction(
@@ -48,7 +48,7 @@ public class Transaction {
     public void markAsCompleted() {
         if (this.status != TransactionStatus.PENDING) {
             throw new InvalidTransactionStatusException(
-                    String.format("Невозможно завершить транзакцию. Текущий статус: %s, ожидается: PENDING", this.status)
+                    String.format("Cannot complete transaction. Current status: %s, expected: PENDING", this.status)
             );
         }
         this.status = TransactionStatus.COMPLETED;
@@ -57,7 +57,7 @@ public class Transaction {
     public void markAsFailed() {
         if (this.status != TransactionStatus.PENDING) {
             throw new InvalidTransactionStatusException(
-                    String.format("Невозможно пометить транзакцию как ошибочную. Текущий статус: %s, ожидается: PENDING", this.status)
+                    String.format("Cannot mark transaction as failed. Current status: %s, expected: PENDING", this.status)
             );
         }
         this.status = TransactionStatus.FAILED;
@@ -66,7 +66,7 @@ public class Transaction {
     public void markAsCancelled() {
         if (this.status != TransactionStatus.PENDING) {
             throw new InvalidTransactionStatusException(
-                    String.format("Невозможно отменить транзакцию. Текущий статус: %s, ожидается: PENDING", this.status)
+                    String.format("Cannot cancel transaction. Current status: %s, expected: PENDING", this.status)
             );
         }
         this.status = TransactionStatus.CANCELLED;
@@ -81,7 +81,7 @@ public class Transaction {
 
     private void validateInvariants() {
         if (id == null || sourceCardId == null || targetCardId == null || amount == null || status == null || createdAt == null) {
-            throw new IllegalArgumentException("Все поля транзакции должны быть заполнены");
+            throw new IllegalArgumentException("All transaction fields must be populated");
         }
     }
 }
