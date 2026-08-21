@@ -1,10 +1,11 @@
 package com.bank.cards.application.usecase;
 
 import com.bank.cards.application.dto.input.TransferCommand;
-import com.bank.cards.application.port.TransactionRecordPort;
 import com.bank.cards.domain.entity.BankCard;
+import com.bank.cards.domain.entity.Transaction;
 import com.bank.cards.domain.exception.CardNotFoundException;
 import com.bank.cards.domain.repository.CardRepository;
+import com.bank.cards.domain.repository.TransactionRepository; // <-- Новый импорт
 import com.bank.cards.domain.valueobject.UserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class TransferMoneyUseCase {
 
     private final CardRepository cardRepository;
-    private final TransactionRecordPort transactionRecordPort;
+    private final TransactionRepository transactionRepository; // <-- Новая зависимость
 
     @Transactional
     public void execute(TransferCommand command, UserId ownerId) {
         BankCard fromCard = cardRepository.findById(command.fromCardId())
                 .orElseThrow(() -> new CardNotFoundException(command.fromCardId()));
+
         BankCard toCard = cardRepository.findById(command.toCardId())
                 .orElseThrow(() -> new CardNotFoundException(command.toCardId()));
 
@@ -31,12 +33,19 @@ public class TransferMoneyUseCase {
             throw new IllegalArgumentException("Target card does not belong to user");
         }
 
+        // Изменяем состояние доменных сущностей
         fromCard.withdraw(command.amount());
         toCard.deposit(command.amount());
 
+        // Сохраняем карты
         cardRepository.save(fromCard);
         cardRepository.save(toCard);
 
-        transactionRecordPort.recordTransfer(command.fromCardId(), command.toCardId(), command.amount());
+        // Создаем доменную сущность транзакции и сразу помечаем как выполненную,
+        // так как изменение балансов уже успешно произошло в рамках этой же транзакции БД.
+        Transaction transaction = Transaction.create(command.fromCardId(), command.toCardId(), command.amount());
+        transaction.markAsCompleted();
+
+        transactionRepository.save(transaction);
     }
 }
