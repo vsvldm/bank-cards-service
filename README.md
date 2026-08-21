@@ -31,8 +31,10 @@ src/main/java/com/bank/cards/
 │   └── repository/                  # Интерфейсы репозиториев (CardRepository, TransactionRepository)
 │
 ├── application/                     # Слой Use Cases (оркестрация бизнес-логики)
-│   ├── usecase/                     # UseCase-классы (CreateCard..., CreateTransaction...)
+│   ├── usecase/                     # UseCase-классы (CreateCard..., CreateTransaction..., GetTransactionsByCard...)
 │   ├── dto/                         # Application DTO (Command, Response)
+│   │   ├── input/                   # Command DTOs (CreateTransactionCommand)
+│   │   └── output/                  # Response DTOs (TransactionResponse, PageResponse)
 │   └── port/                        # Порты для внешних сервисов
 │
 ├── infrastructure/                  # Адаптеры к внешним системам
