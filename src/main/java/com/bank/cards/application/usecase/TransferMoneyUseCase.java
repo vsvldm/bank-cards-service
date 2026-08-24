@@ -5,7 +5,7 @@ import com.bank.cards.domain.entity.BankCard;
 import com.bank.cards.domain.entity.Transaction;
 import com.bank.cards.domain.exception.CardNotFoundException;
 import com.bank.cards.domain.repository.CardRepository;
-import com.bank.cards.domain.repository.TransactionRepository; // <-- Новый импорт
+import com.bank.cards.domain.repository.TransactionRepository;
 import com.bank.cards.domain.valueobject.UserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
