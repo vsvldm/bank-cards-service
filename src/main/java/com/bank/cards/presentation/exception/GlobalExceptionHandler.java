@@ -120,6 +120,20 @@ public class GlobalExceptionHandler {
                 .body(new ErrorResponse(400, "Insufficient funds", e.getMessage(), LocalDateTime.now()));
     }
 
+    @ExceptionHandler(TransactionNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleTransactionNotFound(TransactionNotFoundException e) {
+        log.warn("Transaction not found: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(HttpStatus.NOT_FOUND.value(), "Transaction not found", e.getMessage(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(InvalidTransactionStatusException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidTransactionStatus(InvalidTransactionStatusException e) {
+        log.warn("Invalid transaction status: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(HttpStatus.CONFLICT.value(), "Invalid transaction status", e.getMessage(), LocalDateTime.now()));
+    }
+
     public record ErrorResponse(
             int status,
             String error,
