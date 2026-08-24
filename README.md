@@ -127,13 +127,13 @@ src/main/java/com/bank/cards/
 ```
 ├── config/                # Конфигурация Spring и безопасности
 ├── controller/            # Legacy REST контроллеры (User, Role)
-├── presentation/          # 🆕 Новая HTTP-слой для Card
-│   ├── controller/        # CardController, AdminCardController
-│   ├── dto/request/       # HTTP Request DTO
-│   └── exception/         # GlobalExceptionHandler
-├── application/           # 🆕 Слой Use Cases
-├── domain/                # 🆕 Доменное ядро
-├── infrastructure/        # 🆕 Адаптеры к БД, шифрованию, legacy-модулям
+├── presentation/          # HTTP-слой (вход в систему)
+│   ├── controller/        # REST-контроллеры (CardController, TransactionController, AdminTransactionController 🆕)
+│   ├── dto/request/       # HTTP Request DTO (UpdateTransactionStatusRequest)
+│   └── exception/         # GlobalExceptionHandler (обновлён для Transaction)
+├── application/           # Слой Use Cases
+├── domain/                # Доменное ядро
+├── infrastructure/        # Адаптеры к БД, шифрованию, legacy-модулям
 ├── dto/                   # Legacy DTO
 ├── entity/                # Legacy JPA-сущности
 ├── exception/             # Legacy обработчики исключений
@@ -169,7 +169,7 @@ src/main/java/com/bank/cards/
    cd bank-cards-service
    ```
 
-2. **Создаём файл `.env`** (обязательно, секреты не должны быть в коде)
+2. **Создаём файл `.env`** 
    ```env
    # Database
    POSTGRES_DB=bank
