@@ -15,10 +15,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Адаптер для доменного репозитория TransactionRepository.
- * Реализует интерфейс доменного слоя и использует JpaTransactionRepository для работы с БД.
- */
 @Component
 public class TransactionRepositoryAdapter implements TransactionRepository {
 
@@ -137,11 +133,6 @@ public class TransactionRepositoryAdapter implements TransactionRepository {
         return jpaRepository.count();
     }
 
-    // --- Методы маппинга между доменной сущностью и JPA-сущностью ---
-
-    /**
-     * Преобразование доменной сущности Transaction в JPA-сущность TransactionJpaEntity.
-     */
     private TransactionJpaEntity toJpaEntity(Transaction transaction) {
         return new TransactionJpaEntity(
                 transaction.getId().value(),
@@ -153,13 +144,7 @@ public class TransactionRepositoryAdapter implements TransactionRepository {
         );
     }
 
-    /**
-     * Преобразование JPA-сущности TransactionJpaEntity в доменную сущность Transaction.
-     * Использует приватный конструктор через reflection или фабричный метод.
-     */
     private Transaction toDomainEntity(TransactionJpaEntity entity) {
-        // Создаем доменную сущность через фабричный метод или reflection
-        // Здесь используем приватный конструктор через reflection
         try {
             var constructor = Transaction.class.getDeclaredConstructor(
                     TransactionId.class,
