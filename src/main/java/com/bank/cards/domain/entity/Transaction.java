@@ -45,6 +45,16 @@ public class Transaction {
         );
     }
 
+    public static Transaction reconstitute(TransactionId id, CardId sourceCardId, CardId targetCardId,
+                                           BigDecimal amount, TransactionStatus status, LocalDateTime createdAt) {
+        return new Transaction(id,
+                sourceCardId,
+                targetCardId,
+                amount,
+                status,
+                createdAt);
+    }
+
     public void markAsCompleted() {
         if (this.status != TransactionStatus.PENDING) {
             throw new InvalidTransactionStatusException(

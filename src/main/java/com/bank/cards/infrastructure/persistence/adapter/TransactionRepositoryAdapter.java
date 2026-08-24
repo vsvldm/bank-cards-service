@@ -145,26 +145,13 @@ public class TransactionRepositoryAdapter implements TransactionRepository {
     }
 
     private Transaction toDomainEntity(TransactionJpaEntity entity) {
-        try {
-            var constructor = Transaction.class.getDeclaredConstructor(
-                    TransactionId.class,
-                    CardId.class,
-                    CardId.class,
-                    java.math.BigDecimal.class,
-                    TransactionStatus.class,
-                    java.time.LocalDateTime.class
-            );
-            constructor.setAccessible(true);
-            return constructor.newInstance(
-                    new TransactionId(entity.getId()),
-                    new CardId(entity.getSourceCardId()),
-                    new CardId(entity.getTargetCardId()),
-                    entity.getAmount(),
-                    entity.getStatus(),
-                    entity.getCreatedAt()
-            );
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create domain Transaction entity from JPA entity", e);
-        }
+        return Transaction.reconstitute(
+                new TransactionId(entity.getId()),
+                new CardId(entity.getSourceCardId()),
+                new CardId(entity.getTargetCardId()),
+                entity.getAmount(),
+                entity.getStatus(),
+                entity.getCreatedAt()
+        );
     }
 }
