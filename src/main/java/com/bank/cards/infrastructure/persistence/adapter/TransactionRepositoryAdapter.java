@@ -134,14 +134,14 @@ public class TransactionRepositoryAdapter implements TransactionRepository {
     }
 
     private TransactionJpaEntity toJpaEntity(Transaction transaction) {
-        return new TransactionJpaEntity(
-                transaction.getId().value(),
-                transaction.getSourceCardId().value(),
-                transaction.getTargetCardId().value(),
-                transaction.getAmount(),
-                transaction.getStatus(),
-                transaction.getCreatedAt()
-        );
+        return TransactionJpaEntity.builder()
+                .id(transaction.getId().value())
+                .sourceCardId(transaction.getSourceCardId().value())
+                .targetCardId(transaction.getTargetCardId().value())
+                .amount(transaction.getAmount())
+                .status(transaction.getStatus())
+                .createdAt(transaction.getCreatedAt())
+                .build();
     }
 
     private Transaction toDomainEntity(TransactionJpaEntity entity) {
