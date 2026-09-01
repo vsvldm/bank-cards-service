@@ -83,13 +83,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleIllegalArgument(IllegalArgumentException e) {
         log.warn("Illegal argument: {}", e.getMessage());
 
-        if (e.getMessage() != null && e.getMessage().contains("does not belong to user")) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(new ErrorResponse(403, "Access denied", e.getMessage(), LocalDateTime.now()));
-        }
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(400, "Invalid request", e.getMessage(), LocalDateTime.now()));
+                .body(new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Invalid request", e.getMessage(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(Exception.class)
@@ -132,6 +127,88 @@ public class GlobalExceptionHandler {
         log.warn("Invalid transaction status: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErrorResponse(HttpStatus.CONFLICT.value(), "Invalid transaction status", e.getMessage(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleRoleNotFound(RoleNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorResponse(404, "Role not found", e.getMessage(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(RoleAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleRoleAlreadyExists(RoleAlreadyExistsException e) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErrorResponse(409, "Conflict", e.getMessage(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(SystemRoleModificationException.class)
+    public ResponseEntity<ErrorResponse> handleSystemRoleModification(SystemRoleModificationException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(400, "Invalid Request", e.getMessage(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleUserNotFound(UserNotFoundException e) {
+        log.warn("User not found: {}", e.getMessage());
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                "User not found",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(UsernameAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleUsernameAlreadyExists(UsernameAlreadyExistsException e) {
+        log.warn("Registration/Update conflict: {}", e.getMessage());
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                "Conflict",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(UserOperationException.class)
+    public ResponseEntity<ErrorResponse> handleUserOperationException(UserOperationException e) {
+        log.warn("Invalid user operation: {}", e.getMessage());
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Invalid Operation",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorized(UnauthorizedException e) {
+        log.warn("Unauthorized access: {}", e.getMessage());
+
+        ErrorResponse error = new ErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Unauthorized",
+                e.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
+    @ExceptionHandler(CardOwnershipException.class)
+    public ResponseEntity<ErrorResponse> handleCardOwnership(CardOwnershipException e) {
+        log.warn("Access denied: {}", e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErrorResponse(HttpStatus.FORBIDDEN.value(), "Access denied", e.getMessage(), LocalDateTime.now()));
     }
 
     public record ErrorResponse(

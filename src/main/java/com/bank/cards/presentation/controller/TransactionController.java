@@ -6,6 +6,7 @@ import com.bank.cards.application.port.UserQueryPort;
 import com.bank.cards.application.usecase.GetTransactionsByCardUseCase;
 import com.bank.cards.domain.entity.BankCard;
 import com.bank.cards.domain.exception.CardNotFoundException;
+import com.bank.cards.domain.exception.CardOwnershipException;
 import com.bank.cards.domain.repository.CardRepository;
 import com.bank.cards.domain.valueobject.CardId;
 import com.bank.cards.domain.valueobject.UserId;
@@ -38,7 +39,7 @@ public class TransactionController {
                 .orElseThrow(() -> new CardNotFoundException("Card not found: " + cardId));
 
         if (!card.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("Card does not belong to user");
+            throw new CardOwnershipException("Card does not belong to user");
         }
 
         PageResponse<TransactionResponse> response = getTransactionsByCardUseCase.execute(cId, page, size);

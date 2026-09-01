@@ -1,6 +1,7 @@
 package com.bank.cards.presentation.controller;
 
 import com.bank.cards.application.dto.output.CardResponse;
+import com.bank.cards.application.dto.output.PageResponse;
 import com.bank.cards.application.usecase.AdminDeleteCardUseCase;
 import com.bank.cards.application.usecase.GetAllCardsUseCase;
 import com.bank.cards.application.usecase.ModerateCardStatusUseCase;
@@ -24,14 +25,14 @@ public class AdminCardController {
     private final AdminDeleteCardUseCase adminDeleteCardUseCase;
 
     @GetMapping
-    public ResponseEntity<List<CardResponse>> getAllCards(
+    public ResponseEntity<PageResponse<CardResponse>> getAllCards(
             @RequestParam(required = false) CardStatus status,
             @RequestParam(required = false) String username,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        List<CardResponse> cards = getAllCardsUseCase.execute(status, username, page, size);
-        return ResponseEntity.ok(cards);
+        PageResponse<CardResponse> response = getAllCardsUseCase.execute(status, username, page, size);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/{cardId}/status")

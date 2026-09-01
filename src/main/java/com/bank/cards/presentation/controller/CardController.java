@@ -3,6 +3,7 @@ package com.bank.cards.presentation.controller;
 import com.bank.cards.application.dto.input.CreateCardCommand;
 import com.bank.cards.application.dto.input.TransferCommand;
 import com.bank.cards.application.dto.output.CardResponse;
+import com.bank.cards.application.dto.output.PageResponse;
 import com.bank.cards.application.port.UserQueryPort;
 import com.bank.cards.application.usecase.*;
 import com.bank.cards.domain.valueobject.CardId;
@@ -50,14 +51,14 @@ public class CardController {
     }
 
     @GetMapping("/my-cards")
-    public ResponseEntity<List<CardResponse>> getMyCards(
+    public ResponseEntity<PageResponse<CardResponse>> getMyCards(
             Principal principal,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        List<CardResponse> cards = getCardsUseCase.executeByUsername(
+        PageResponse<CardResponse> response = getCardsUseCase.executeByUsername(
                 principal.getName(), page, size);
-        return ResponseEntity.ok(cards);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/{cardId}/block")
