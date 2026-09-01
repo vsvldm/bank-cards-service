@@ -29,4 +29,10 @@ public interface CardRepository {
     List<BankCard> findByStatus(CardStatus status, int page, int size);
 
     List<BankCard> findByUserIdAndStatus(UserId userId, CardStatus status, int page, int size);
+
+    long countAll();
+
+    long countByStatus(CardStatus status);
+
+    long countByUserIdAndStatus(UserId userId, CardStatus status);
 }

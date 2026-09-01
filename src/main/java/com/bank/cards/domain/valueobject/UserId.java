@@ -1,13 +1,19 @@
 package com.bank.cards.domain.valueobject;
 
-public record UserId(Long value) {
+import java.util.UUID;
 
+public record UserId(UUID value) {
     public UserId {
         if (value == null) {
             throw new IllegalArgumentException("UserId cannot be null");
         }
-        if (value <= 0) {
-            throw new IllegalArgumentException("UserId must be positive");
-        }
+    }
+
+    public static UserId generate() {
+        return new UserId(UUID.randomUUID());
+    }
+
+    public static UserId fromString(String id) {
+        return new UserId(UUID.fromString(id));
     }
 }
