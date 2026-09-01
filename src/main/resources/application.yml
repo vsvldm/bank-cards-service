@@ -96,3 +96,7 @@ cors:
   allowed-headers: "*"
   allow-credentials: true
   max-age: 3600
+
+app:
+  cards:
+    max-per-user: 5

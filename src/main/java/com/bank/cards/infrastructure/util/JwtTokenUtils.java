@@ -1,4 +1,4 @@
-package com.bank.cards.util;
+package com.bank.cards.infrastructure.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

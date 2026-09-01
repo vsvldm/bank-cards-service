@@ -7,6 +7,9 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
+                  name: id
+                  value: "00000000-0000-0000-0000-000000000001"
+              - column:
                   name: username
                   value: "admin"
               - column:
@@ -20,16 +23,16 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
-                  value: "1"
+                  value: "00000000-0000-0000-0000-000000000001"
               - column:
                   name: role_id
-                  value: "1"
+                  value: "00000000-0000-0000-0000-000000000002"
         - insert:
             tableName: user_roles
             columns:
               - column:
                   name: user_id
-                  value: "1"
+                  value: "00000000-0000-0000-0000-000000000001"
               - column:
                   name: role_id
-                  value: "2"
+                  value: "00000000-0000-0000-0000-000000000003"

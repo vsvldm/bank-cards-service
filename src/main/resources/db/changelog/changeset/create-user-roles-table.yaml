@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: user_id
-                  type: bigint
+                  type: uuid
                   constraints:
                     nullable: false
                     foreignKeyName: fk_user_roles_user
@@ -16,7 +16,7 @@ databaseChangeLog:
                     deleteCascade: true
               - column:
                   name: role_id
-                  type: bigint
+                  type: uuid
                   constraints:
                     nullable: false
                     foreignKeyName: fk_user_roles_role

@@ -93,6 +93,21 @@ public class CardRepositoryAdapter implements CardRepository {
                 .toList();
     }
 
+    @Override
+    public long countAll() {
+        return jpaRepository.count();
+    }
+
+    @Override
+    public long countByStatus(CardStatus status) {
+        return jpaRepository.countByStatus(status.name());
+    }
+
+    @Override
+    public long countByUserIdAndStatus(UserId userId, CardStatus status) {
+        return jpaRepository.countByUserIdAndStatus(userId.value(), status.name());
+    }
+
     private CardJpaEntity toJpaEntity(BankCard card) {
         return CardJpaEntity.builder()
                 .id(card.getId().value())

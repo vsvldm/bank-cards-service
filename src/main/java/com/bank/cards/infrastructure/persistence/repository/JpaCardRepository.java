@@ -12,13 +12,17 @@ import java.util.UUID;
 @Repository
 public interface JpaCardRepository extends JpaRepository<CardJpaEntity, UUID> {
 
-    List<CardJpaEntity> findByUserId(Long userId);
+    List<CardJpaEntity> findByUserId(UUID userId);
 
-    Page<CardJpaEntity> findByUserId(Long userId, Pageable pageable);
+    Page<CardJpaEntity> findByUserId(UUID userId, Pageable pageable);
 
-    long countByUserId(Long userId);
+    long countByUserId(UUID userId);
 
     Page<CardJpaEntity> findByStatus(String status, Pageable pageable);
 
-    Page<CardJpaEntity> findByUserIdAndStatus(Long userId, String status, Pageable pageable);
+    long countByStatus(String status);
+
+    Page<CardJpaEntity> findByUserIdAndStatus(UUID userId, String status, Pageable pageable);
+
+    long countByUserIdAndStatus(UUID userId, String status);
 }

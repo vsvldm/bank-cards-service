@@ -1,21 +1,21 @@
-package com.bank.cards.security.jwt.service;
+package com.bank.cards.infrastructure.security.jwt.service;
 
-import com.bank.cards.exception.exception.UnauthorizedException;
-import com.bank.cards.security.jwt.dto.JwtRequest;
-import com.bank.cards.security.jwt.dto.JwtResponse;
-import com.bank.cards.service.user.UserService;
-import com.bank.cards.util.JwtTokenUtils;
+import com.bank.cards.domain.exception.UnauthorizedException;
+import com.bank.cards.presentation.dto.request.JwtRequest;
+import com.bank.cards.application.dto.output.JwtResponse;
+import com.bank.cards.infrastructure.util.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService {
-    private final UserService userService;
+    private final UserDetailsService userDetailsService;
     private final JwtTokenUtils jwtTokenUtils;
     private final AuthenticationManager authenticationManager;
 
@@ -26,7 +26,7 @@ public class JwtServiceImpl implements JwtService {
                   jwtRequest.getUsername(),
                   jwtRequest.getPassword()));
 
-          UserDetails userDetails = userService.loadUserByUsername(jwtRequest.getUsername());
+          UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUsername());
           String token = jwtTokenUtils.generateToken(userDetails);
 
           return new JwtResponse(token);

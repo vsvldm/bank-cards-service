@@ -8,8 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: bigint
-                  autoIncrement: true
+                  type: uuid
                   constraints:
                     primaryKey: true
                     nullable: false
@@ -33,8 +32,10 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: timestamp
+                  name: created_at
                   type: timestamp
+                  constraints:
+                    nullable: false
               - column:
                   name: status
                   type: varchar(20)

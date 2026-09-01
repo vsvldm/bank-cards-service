@@ -1,7 +1,7 @@
-package com.bank.cards.config;
+package com.bank.cards.infrastructure.config;
 
-import com.bank.cards.exception.exception.UnauthorizedException;
-import com.bank.cards.util.JwtTokenUtils;
+import com.bank.cards.domain.exception.UnauthorizedException;
+import com.bank.cards.infrastructure.util.JwtTokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

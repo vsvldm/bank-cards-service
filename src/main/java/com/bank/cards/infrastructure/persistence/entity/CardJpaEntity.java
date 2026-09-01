@@ -22,7 +22,7 @@ public class CardJpaEntity {
     private UUID id;
 
     @Column(name = "user_id", nullable = false)
-    private Long userId;
+    private UUID userId;
 
     @Column(name = "encrypted_card_number", nullable = false, length = 500)
     private String encryptedCardNumber;
@@ -46,7 +46,7 @@ public class CardJpaEntity {
     private LocalDate updatedAt;
 
     @Builder
-    private CardJpaEntity(UUID id, Long userId, String encryptedCardNumber,
+    private CardJpaEntity(UUID id, UUID userId, String encryptedCardNumber,
                           String encryptedCvv, LocalDate expiryDate,
                           BigDecimal balance, String status) {
         this.id = id;
