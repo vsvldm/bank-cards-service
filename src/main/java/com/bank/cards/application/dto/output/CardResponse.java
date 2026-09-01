@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public record CardResponse(
         UUID id,
-        Long userId,
+        UUID userId,
         String maskedCardNumber,
         String expiryDate,
         BigDecimal balance,
@@ -19,12 +19,11 @@ public record CardResponse(
     public static CardResponse from(BankCard card, EncryptionPort encryptionPort) {
         String decrypted = encryptionPort.decrypt(card.getEncryptedCardNumber());
         CardNumber cardNumber = new CardNumber(decrypted);
-        String masked = cardNumber.masked();
 
         return new CardResponse(
                 card.getId().value(),
                 card.getUserId().value(),
-                masked,
+                cardNumber.masked(),
                 card.getExpiryDate().formatted(),
                 card.getBalance(),
                 card.getStatus()

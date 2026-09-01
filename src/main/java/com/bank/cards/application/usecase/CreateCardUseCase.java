@@ -9,6 +9,7 @@ import com.bank.cards.domain.port.EncryptionPort;
 import com.bank.cards.domain.repository.CardRepository;
 import com.bank.cards.domain.valueobject.EncryptedData;
 import com.bank.cards.domain.valueobject.UserId;
+import com.bank.cards.infrastructure.config.CardProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,19 +18,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CreateCardUseCase {
 
-    private static final int MAX_CARDS_PER_USER = 5;
-
     private final CardRepository cardRepository;
     private final EncryptionPort encryptionPort;
     private final UserQueryPort userQueryPort;
+    private final CardProperties cardProperties;
 
     @Transactional
     public CardResponse execute(CreateCardCommand command) {
         UserId userId = userQueryPort.getUserIdByUsername(command.username());
 
         long existingCards = cardRepository.countByUserId(userId);
-        if (existingCards >= MAX_CARDS_PER_USER) {
-            throw new TooManyCardsException(userId, existingCards, MAX_CARDS_PER_USER);
+
+        if (existingCards >= cardProperties.maxPerUser()) {
+            throw new TooManyCardsException(userId, existingCards, cardProperties.maxPerUser());
         }
 
         EncryptedData encryptedNumber = encryptionPort.encrypt(command.cardNumber().value());

@@ -4,6 +4,7 @@ import com.bank.cards.application.dto.input.TransferCommand;
 import com.bank.cards.domain.entity.BankCard;
 import com.bank.cards.domain.entity.Transaction;
 import com.bank.cards.domain.exception.CardNotFoundException;
+import com.bank.cards.domain.exception.CardOwnershipException;
 import com.bank.cards.domain.repository.CardRepository;
 import com.bank.cards.domain.repository.TransactionRepository;
 import com.bank.cards.domain.valueobject.UserId;
@@ -27,10 +28,10 @@ public class TransferMoneyUseCase {
                 .orElseThrow(() -> new CardNotFoundException(command.toCardId()));
 
         if (!fromCard.getUserId().equals(ownerId)) {
-            throw new IllegalArgumentException("Source card does not belong to user");
+            throw new CardOwnershipException("Source card does not belong to user");
         }
         if (!toCard.getUserId().equals(ownerId)) {
-            throw new IllegalArgumentException("Target card does not belong to user");
+            throw new CardOwnershipException("Target card does not belong to user");
         }
 
         fromCard.withdraw(command.amount());

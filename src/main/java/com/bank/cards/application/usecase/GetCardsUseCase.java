@@ -1,6 +1,7 @@
 package com.bank.cards.application.usecase;
 
 import com.bank.cards.application.dto.output.CardResponse;
+import com.bank.cards.application.dto.output.PageResponse;
 import com.bank.cards.application.port.UserQueryPort;
 import com.bank.cards.domain.port.EncryptionPort;
 import com.bank.cards.domain.repository.CardRepository;
@@ -20,10 +21,15 @@ public class GetCardsUseCase {
     private final EncryptionPort encryptionPort;
 
     @Transactional(readOnly = true)
-    public List<CardResponse> executeByUsername(String username, int page, int size) {
+    public PageResponse<CardResponse> executeByUsername(String username, int page, int size) {
         UserId userId = userQueryPort.getUserIdByUsername(username);
-        return cardRepository.findByUserId(userId, page, size).stream()
+
+        List<CardResponse> content = cardRepository.findByUserId(userId, page, size).stream()
                 .map(card -> CardResponse.from(card, encryptionPort))
                 .toList();
+
+        long totalElements = cardRepository.countByUserId(userId);
+
+        return PageResponse.of(content, page, size, totalElements);
     }
 }

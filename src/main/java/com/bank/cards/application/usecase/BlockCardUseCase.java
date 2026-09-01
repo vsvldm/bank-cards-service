@@ -2,6 +2,7 @@ package com.bank.cards.application.usecase;
 
 import com.bank.cards.domain.entity.BankCard;
 import com.bank.cards.domain.exception.CardNotFoundException;
+import com.bank.cards.domain.exception.CardOwnershipException;
 import com.bank.cards.domain.repository.CardRepository;
 import com.bank.cards.domain.valueobject.CardId;
 import com.bank.cards.domain.valueobject.UserId;
@@ -21,8 +22,7 @@ public class BlockCardUseCase {
                 .orElseThrow(() -> new CardNotFoundException(cardId));
 
         if (!card.getUserId().equals(ownerId)) {
-            throw new IllegalArgumentException("Card does not belong to user");
-        }
+            throw new CardOwnershipException("Card does not belong to user");        }
 
         card.block();
         cardRepository.save(card);
